@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Microservicio 1: MySQL
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql_logistica
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: db_clientes
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-mysql:/docker-entrypoint-initdb.d
+
+  # Microservicio 2: PostgreSQL
+  postgres-db:
+    image: postgres:15
+    container_name: postgres_logistica
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: db_vehiculos
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-postgres:/docker-entrypoint-initdb.d
+
+  # Microservicio 3: MongoDB
+  mongo-db:
+    image: mongo:6.0
+    container_name: mongo_logistica
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: mongopassword
+    volumes:
+      - mongo_data:/data/db
+      - ./init-mongo:/docker-entrypoint-initdb.d
+
+volumes:
+  mysql_data:
+  postgres_data:
+  mongo_data:
